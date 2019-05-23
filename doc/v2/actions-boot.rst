@@ -647,6 +647,46 @@ The ``pyocd`` boot method takes no arguments or parameters.
     timeout:
       minutes: 10
 
+.. index:: boot method jlink
+
+.. _boot_method_jlink:
+
+
+.. index:: boot method minimal
+
+.. _boot_method_minimal:
+
+minimal
+=======
+
+The ``minimal`` method is used to power-on the :term:`DUT` and to let the
+:term:`DUT` boot without any interaction.
+
+.. code-block:: yaml
+
+    method: minimal
+    prompts:
+    - 'root@debian:~#'
+    - '/ #'
+
+.. note:: auto-login and transfer_overlay are both supported for this method.
+
+By default LAVA will reset the board power when executing this action. Users
+can skip this step by adding ``reset: false``. This can be useful when testing
+bootloader in interactive tests and then booting to the OS.
+
+jlink
+=====
+
+The ``jlink`` boot method takes no arguments or parameters.
+
+.. code-block:: yaml
+
+ - boot:
+    method: jlink
+    timeout:
+      minutes: 10
+
 .. index:: boot method console
 
 .. _boot_method_console:

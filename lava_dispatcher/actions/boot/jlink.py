@@ -1,6 +1,6 @@
-# Copyright (C) 2016 Linaro Limited
+# Copyright (C) 2019 Linaro Limited
 #
-# Author: Tyler Baker <tyler.baker@linaro.org>
+# Author: Andrei Gansari <andrei.gansari@linaro.org>
 #
 # This file is part of LAVA Dispatcher.
 #
@@ -18,23 +18,15 @@
 # along
 # with this program; if not, see <http://www.gnu.org/licenses>.
 
-# from lava_common.utils import debian_filename_version
 from lava_dispatcher.action import Pipeline, Action, JobError
 from lava_dispatcher.logical import Boot, RetryAction
 from lava_dispatcher.actions.boot import BootAction
 from lava_dispatcher.connections.serial import ConnectDevice
-# from lava_dispatcher.utils.shell import which
-# from lava_dispatcher.utils.strings import substitute
 from lava_dispatcher.power import ResetDevice
 from lava_dispatcher.utils.udev import WaitDeviceBoardID
-# from lava_common.exceptions import InfrastructureError
-
-# import subprocess
 
 
 class JLink(Boot):
-
-    compatibility = 4  # FIXME: change this to 5 and update test cases
 
     def __init__(self, parent, parameters):
         super().__init__(parent)
@@ -94,23 +86,6 @@ class FlashJLinkAction(Action):
     description = "flash jlink to boot the image"
     summary = "flash jlink to boot the image"
 
-    @staticmethod
-    def filename_version(binary):
-        # if binary is not absolute, fail.
-        msg = "Unable to retrieve version of %s" % binary
-        ver_str = "TODO later - read version"
-        # try:
-        #     ver_str = (
-        #         subprocess.check_output([binary, "-version"])
-        #         .decode("utf-8", errors="replace")
-        #     )
-        #     self.logger.info('version = ', binary)
-        #     if not ver_str:
-        #         raise InfrastructureError(msg+" 1 "+binary)
-        # except subprocess.CalledProcessError:
-        #     raise InfrastructureError(msg+" 2 "+ver_str)
-        return "%s, version %s" % (binary, ver_str)
-
     def __init__(self):
         super().__init__()
         self.base_command = []
@@ -121,15 +96,11 @@ class FlashJLinkAction(Action):
         boot = self.job.device["actions"]["boot"]["methods"]["jlink"]
         jlink_binary = boot["parameters"]["command"]
         load_address = boot["parameters"]["address"]
-        # binary = which(jlink_binary)
-        self.logger.info(self.filename_version(jlink_binary))
-        # self.logger.info(self.run_command("pwd"))
         self.base_command = [jlink_binary]
         self.base_command.extend(boot["parameters"].get("options", []))
         if self.job.device["board_id"] == "0000000000":
             self.errors = "[JLink] board_id unset"
         substitutions = {}
-        # self.base_command.extend(["--board", self.job.device["board_id"]])
         for action in self.get_namespace_keys("download-action"):
             jlink_full_command = []
             image_arg = self.get_namespace_data(
@@ -147,15 +118,6 @@ class FlashJLinkAction(Action):
             lines.append('erase')  # Erase all flash sectors
             lines.append('sleep 500')
 
-            # if image_arg:
-            #     if not isinstance(image_arg, str):
-            #         self.errors = "image_arg is not a string (try quoting it)"
-            #         continue
-            #     substitutions["{%s}" % action] = action_arg
-            #     binary_image = substitute([image_arg]
-            # else:
-            #     binary_image = action_arg
-
             lines.append('loadfile {} 0x{:x}'.format(binary_image,
                          load_address))
             lines.append('verifybin {} 0x{:x}'.format(binary_image,
@@ -172,7 +134,7 @@ class FlashJLinkAction(Action):
 
             self.exec_list.append(jlink_full_command)
         if not self.exec_list:
-            self.errors = "No JLink command to execute"
+            self.errors = "No JLinkExe command to execute"
 
     def run(self, connection, max_end_time):
         connection = self.get_namespace_data(

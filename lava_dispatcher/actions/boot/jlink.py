@@ -31,6 +31,7 @@ from lava_dispatcher.utils.udev import WaitDeviceBoardID
 
 # import subprocess
 
+
 class JLink(Boot):
 
     compatibility = 4  # FIXME: change this to 5 and update test cases
@@ -119,6 +120,7 @@ class FlashJLinkAction(Action):
         super().validate()
         boot = self.job.device["actions"]["boot"]["methods"]["jlink"]
         jlink_binary = boot["parameters"]["command"]
+        load_address = boot["parameters"]["address"]
         # binary = which(jlink_binary)
         self.logger.info(self.filename_version(jlink_binary))
         # self.logger.info(self.run_command("pwd"))
@@ -155,9 +157,9 @@ class FlashJLinkAction(Action):
             #     binary_image = action_arg
 
             lines.append('loadfile {} 0x{:x}'.format(binary_image,
-                         0x00000000))
+                         load_address))
             lines.append('verifybin {} 0x{:x}'.format(binary_image,
-                         0x00000000))
+                         load_address))
             lines.append('r')   # Restart the CPU
             lines.append('qc')  # Close the connection and quit
 

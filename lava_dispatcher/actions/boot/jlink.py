@@ -100,6 +100,9 @@ class FlashJLinkAction(Action):
         self.base_command.extend(boot["parameters"].get("options", []))
         if self.job.device["board_id"] == "0000000000":
             self.errors = "[JLink] board_id unset"
+        #select the board with the coorect serial number
+        self.base_command.extend("-SelectEmuBySN ")
+        self.base_command.extend(self.job.device["board_id"])
         substitutions = {}
         for action in self.get_namespace_keys("download-action"):
             jlink_full_command = []

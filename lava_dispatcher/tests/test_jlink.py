@@ -1,6 +1,6 @@
-# Copyright (C) 2017 Linaro Limited
+# Copyright (C) 2019 Linaro Limited
 #
-# Author: Matthew Hart <matthew.hart@linaro.org>
+# Author: Andrei Gansari <andrei.gansari@linaro.org>
 #
 # This file is part of LAVA Dispatcher.
 #

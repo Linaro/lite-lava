@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2018 Linaro Limited
+# Copyright (C) 2019 Linaro Limited
 #
-# Author: Rémi Duraffort <remi.duraffort@linaro.org>
+# Author: Andrei Gansari <andrei.gansari@linaro.org>
 #
 # This file is part of LAVA.
 #
